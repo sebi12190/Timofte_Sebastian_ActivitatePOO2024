@@ -1,0 +1,214 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Magazin {
+private:
+    string oras;
+    int nrAngajati;
+    float* salarii;
+    float suprafata;
+    const int anDeschidere;
+    static int impozitM2;
+
+public:
+    // Constructor implicit
+    Magazin() : anDeschidere(2024), nrAngajati(0), salarii(nullptr), suprafata(50), oras("Bucuresti") {}
+
+    // Constructor cu parametri
+    Magazin(string oras, int nrAngajati, float suprafata, int an)
+        : oras(oras), nrAngajati(nrAngajati), suprafata(suprafata), anDeschidere(an) {
+        this->salarii = new float[nrAngajati];
+        for (int i = 0; i < nrAngajati; i++) {
+            this->salarii[i] = 2000 + i;
+        }
+    }
+
+    // Constructor de copiere
+    Magazin(const Magazin& m) : anDeschidere(m.anDeschidere), oras(m.oras), nrAngajati(m.nrAngajati), suprafata(m.suprafata) {
+        salarii = new float[m.nrAngajati];
+        for (int i = 0; i < m.nrAngajati; i++) {
+            salarii[i] = m.salarii[i];
+        }
+    }
+
+    // Destructor
+    ~Magazin() {
+        delete[] salarii;
+    }
+
+    // Operator de atribuire
+    Magazin& operator=(const Magazin& m) {
+        if (this != &m) { // Verificare autoasignare
+            delete[] salarii; // Eliberare memorie veche
+
+            this->oras = m.oras;
+            this->nrAngajati = m.nrAngajati;
+            this->suprafata = m.suprafata;
+
+            salarii = new float[m.nrAngajati];
+            for (int i = 0; i < m.nrAngajati; i++) {
+                salarii[i] = m.salarii[i];
+            }
+        }
+        return *this;
+    }
+
+    // Getter și setter pentru nrAngajati
+    int getNrAngajati() const {
+        return nrAngajati;
+    }
+
+    void setNrAngajati(int nrAngajati, const float* salariiInput) {
+        if (nrAngajati > 0) {
+            this->nrAngajati = nrAngajati;
+            delete[] salarii; // Eliberare memorie veche
+            salarii = new float[nrAngajati];
+            for (int i = 0; i < nrAngajati; i++) {
+                salarii[i] = salariiInput[i];
+            }
+        }
+    }
+
+    // Getter și setter pentru suprafata
+    float getSuprafata() const {
+        return suprafata;
+    }
+
+    void setSuprafata(float suprafataNoua) {
+        if (suprafataNoua > 0) {
+            suprafata = suprafataNoua;
+        }
+    }
+
+    // Getter pentru salarii
+    float* getSalarii() const {
+        return salarii;
+    }
+
+    // Calcularea salariului unui angajat pe baza indexului
+    float getSalariu(int index) const {
+        if (index >= 0 && index < nrAngajati) {
+            return salarii[index];
+        }
+        return -1; // Valoare invalidă
+    }
+
+    // Operator de adunare între două obiecte Magazin
+    Magazin operator+(const Magazin& m2) const {
+        Magazin temp = *this;
+        temp.nrAngajati = this->nrAngajati + m2.nrAngajati;
+        float* aux = new float[temp.nrAngajati];
+        for (int i = 0; i < this->nrAngajati; i++) {
+            aux[i] = this->salarii[i];
+        }
+        for (int i = 0; i < m2.nrAngajati; i++) {
+            aux[i + this->nrAngajati] = m2.salarii[i];
+        }
+        delete[] temp.salarii;
+        temp.salarii = aux;
+        return temp;
+    }
+
+    // Operator +=
+    Magazin& operator+=(const Magazin& m) {
+        *this = *this + m;
+        return *this;
+    }
+
+    // Operator + între un salariu și un obiect Magazin
+    Magazin operator+(float salariu) const {
+        Magazin temp = *this;
+        float* aux = new float[temp.nrAngajati + 1];
+        for (int i = 0; i < this->nrAngajati; i++) {
+            aux[i] = this->salarii[i];
+        }
+        aux[temp.nrAngajati] = salariu;
+        temp.salarii = aux;
+        temp.nrAngajati++;
+        return temp;
+    }
+
+    // Operator + între un salariu și un obiect Magazin (friend)
+    friend Magazin operator+(float salariu, const Magazin& m);
+
+    // Afisare
+    void afisare() const {
+        cout << "Oras: " << oras << endl;
+        cout << "Numar angajati: " << nrAngajati << endl;
+        if (salarii != nullptr) {
+            for (int i = 0; i < nrAngajati; i++) {
+                cout << salarii[i] << " ";
+            }
+        }
+        cout << endl;
+        cout << "Suprafata: " << suprafata << endl;
+        cout << "An deschidere: " << anDeschidere << endl;
+        cout << "Impozit pe m2: " << impozitM2 << endl;
+    }
+
+    // Calcularea suprafetei medii per angajat
+    float calculeazaSuprafataMedie() const {
+        return (nrAngajati != 0) ? suprafata / nrAngajati : 0;
+    }
+
+    // Modificarea impozitului per m2
+    static void modificaImpozit(int impozit) {
+        if (impozit > 0) {
+            impozitM2 = impozit;
+        }
+    }
+
+    // Calcularea suprafetei totale
+    static float calculeazaSuprafataTotala(Magazin* vector, int nrMagazine) {
+        float suma = 0;
+        for (int i = 0; i < nrMagazine; i++) {
+            suma += vector[i].suprafata;
+        }
+        return suma;
+    }
+
+    // Compararea magazinelor
+    bool operator>(const Magazin& m) const {
+        return (this->suprafata > m.suprafata) && (this->nrAngajati > m.nrAngajati);
+    }
+
+    bool operator==(const Magazin& m) const {
+        return (this->suprafata == m.suprafata) && (this->nrAngajati == m.nrAngajati);
+    }
+};
+
+int Magazin::impozitM2 = 2;
+
+// Operator + friend pentru adăugarea unui salariu la magazin
+Magazin operator+(float salariu, const Magazin& m) {
+    Magazin temp = m;
+    float* aux = new float[temp.nrAngajati + 1];
+    for (int i = 0; i < temp.nrAngajati; i++) {
+        aux[i] = temp.salarii[i];
+    }
+    aux[temp.nrAngajati] = salariu;
+    temp.salarii = aux;
+    temp.nrAngajati++;
+    return temp;
+}
+
+int main() {
+    // Test pentru clasa Magazin
+    Magazin m1("Cluj", 3, 100, 2010);
+    Magazin m2("Bucuresti", 2, 200, 2015);
+
+    m1.afisare();
+    m2.afisare();
+
+    // Operatori
+    Magazin m3 = m1 + m2;  // Combina m1 și m2
+    m3.afisare();
+
+    // Adăugare salariu
+    Magazin m4 = m1 + 5000; // Adaugă salariu 5000 la m1
+    m4.afisare();
+
+    return 0;
+}
