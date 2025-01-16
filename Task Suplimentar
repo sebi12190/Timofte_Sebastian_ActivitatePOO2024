@@ -37,6 +37,5 @@ int main() {
         cout << "Masina " << i + 1 <<endl;
         masini[i].afisare();
     }
-
     return 0;
 }
