@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+
+class Masina {
+public:
+    string marca;
+    string model;
+    int anFabricatie;
+    string culoare;
+    int numarKilometri;
+
+    void citire() {
+        cout << "Introduceti marca= ";cin >> marca;
+        cout << "Introduceti modelul= ";cin >> model;
+        cout << "Introduceti anul fabricatiei= ";cin >> anFabricatie;
+        cout << "Introduceti culoarea= ";cin >> culoare;
+        cout << "Introduceti numarul de kilometri= ";cin >> numarKilometri;
+    }
+
+    void afisare() {
+        cout << "Marca= " << marca << endl;
+        cout << "Model= " << model << endl;
+        cout << "An Fabricatie= " << anFabricatie << endl;
+        cout << "Culoare= " << culoare << endl;
+        cout << "Numar Kilometri= " << numarKilometri << endl;
+    }
+};
+
+int main() {
+    Masina masini[10];
+    for (int i = 0; i < 10; i++) {
+        cout << "\nIntroduceti detaliile pentru masina " << i + 1 << endl;
+        masini[i].citire();
+    }
+    cout << "Detaliile masinilor introduse" << endl;
+    for (int i = 0; i < 10; i++) {
+        cout << "Masina " << i + 1 <<endl;
+        masini[i].afisare();
+    }
+
+    return 0;
+}
