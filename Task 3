@@ -1,0 +1,90 @@
+#include <iostream>
+#include <cstring>
+using namespace std;
+
+class Masina {
+private:
+    string marca;
+    string model;
+    int anFabricatie;
+    string culoare;
+    int numarKilometri;
+
+public:
+    Masina() : marca(""), model(""), anFabricatie(0), culoare(""), numarKilometri(0) {}
+
+    Masina(const Masina& other) {
+        marca = other.marca;
+        model = other.model;
+        anFabricatie = other.anFabricatie;
+        culoare = other.culoare;
+        numarKilometri = other.numarKilometri;
+    }
+    
+    ~Masina() {
+    }
+
+    void setMarca(const string& marcaNoua) { marca = marcaNoua; }
+    void setModel(const string& modelNou) { model = modelNou; }
+    void setAnFabricatie(int anNou) { anFabricatie = anNou; }
+    void setCuloare(const string& culoareNoua) { culoare = culoareNoua; }
+    void setNumarKilometri(int numarNou) { numarKilometri = numarNou; }
+
+    string getMarca() const { return marca; }
+    string getModel() const { return model; }
+    int getAnFabricatie() const { return anFabricatie; }
+    string getCuloare() const { return culoare; }
+    int getNumarKilometri() const { return numarKilometri; }
+
+    void citire() {
+        string temp;
+        cout << "Introduceti marca= "; cin >> temp; setMarca(temp);
+        cout << "Introduceti modelul= "; cin >> temp; setModel(temp);
+        cout << "Introduceti anul fabricatiei= "; int an; cin >> an; setAnFabricatie(an);
+        cout << "Introduceti culoarea= "; cin >> temp; setCuloare(temp);
+        cout << "Introduceti numarul de kilometri= "; int km; cin >> km; setNumarKilometri(km);
+    }
+
+    void afisare() const {
+        cout << "Marca= " << getMarca() << endl;
+        cout << "Model= " << getModel() << endl;
+        cout << "An Fabricatie= " << getAnFabricatie() << endl;
+        cout << "Culoare= " << getCuloare() << endl;
+        cout << "Numar Kilometri= " << getNumarKilometri() << endl;
+    }
+
+    friend void procesareMasini(Masina& m1, Masina& m2);
+    friend void resetareKilometri(Masina& m);
+};
+
+void procesareMasini(Masina& m1, Masina& m2) {
+    if (m1.numarKilometri < m2.numarKilometri) {
+        cout << m1.marca << " are mai putini kilometri decat " << m2.marca << endl;
+    } else if (m1.numarKilometri > m2.numarKilometri) {
+        cout << m2.marca << " are mai putini kilometri decat " << m1.marca << endl;
+    } else {
+        cout << "Ambele masini au acelasi numar de kilometri " << endl;
+    }
+}
+
+void resetareKilometri(Masina& m) {
+    m.numarKilometri = 0;
+    cout << "Kilometrajul masinii " << m.marca << " a fost resetat " << endl;
+}
+
+int main() {
+    Masina m1, m2;
+    cout << "Introduceti detalii pentru prima masina " << endl;
+    m1.citire();
+    cout << "Introduceti detalii pentru a doua masina " << endl;
+    m2.citire();
+    cout << "Detalii masini introduse " << endl;
+    m1.afisare();
+    m2.afisare();
+    cout << "Comparatie intre masini " << endl;
+    procesareMasini(m1, m2);
+    cout << "Resetare kilometraj pentru prima masina " << endl;
+    resetareKilometri(m1);
+    m1.afisare();
+    return 0;
+}
