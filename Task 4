@@ -1,0 +1,93 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Motor {
+public:
+    int putere;
+    string tip;
+
+    Motor(int p = 0, string t = "") : putere(p), tip(t) {}
+
+    friend ostream& operator<<(ostream& out, const Motor& m);
+};
+
+ostream& operator<<(ostream& out, const Motor& m) {
+    out << "Putere = " << m.putere << " CP, Tip = " << m.tip;
+    return out;
+}
+
+class Masina {
+public:
+    string marca;
+    int an_fabricatie;
+    int pret;
+    Motor motor;
+
+    Masina(string m = "", int an = 0, int p = 0, Motor mot = Motor()) : marca(m), an_fabricatie(an), pret(p), motor(mot) {}
+
+    Masina& operator=(const Masina& m) {
+        marca = m.marca;
+        an_fabricatie = m.an_fabricatie;
+        pret = m.pret;
+        motor = m.motor;
+        return *this;
+    }
+
+    Masina operator+(const Masina& m) {
+        string marca_combinata = marca + " & " + m.marca;
+        int pret_total = pret + m.pret;
+        return Masina(marca_combinata, an_fabricatie, pret_total, motor);
+    }
+
+    friend ostream& operator<<(ostream& out, const Masina& m);
+
+    friend void afiseazaDetalii(Masina& m);
+};
+
+ostream& operator<<(ostream& out, const Masina& m) {
+    out << "Marca = " << m.marca << ", An fabricatie = " << m.an_fabricatie << ", Pret = " << m.pret << ", Motor = " << m.motor;
+    return out;
+}
+
+void afiseazaDetalii(Masina& m) {
+    cout << "Detalii masina (cu motor): " << endl;
+    cout << m << endl;
+}
+
+class Proprietar {
+public:
+    string nume;
+    int varsta;
+
+    Proprietar(string n = "", int v = 0) : nume(n), varsta(v) {}
+
+    friend ostream& operator<<(ostream& out, const Proprietar& p);
+};
+
+ostream& operator<<(ostream& out, const Proprietar& p) {
+    out << "Nume = " << p.nume << ", Varsta = " << p.varsta;
+    return out;
+}
+
+int main() {
+    Motor motor1(150, "V6");
+
+    Masina masina1("Dacia", 2020, 15000, motor1);
+    Masina masina2("Renault", 2021, 18000, motor1);
+
+    Proprietar proprietar1("Ion", 30);
+
+    Masina masina3;
+    masina3 = masina1;
+    cout << "Masina3 dupa atribuire: " << masina3 << endl;
+
+    Masina masina4 = masina1 + masina2;
+    cout << "Masina4 (combinata): " << masina4 << endl;
+
+    afiseazaDetalii(masina1);
+
+    cout << "Proprietar = " << proprietar1 << endl;
+
+    return 0;
+}
