@@ -1,0 +1,159 @@
+#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+class Motor {
+public:
+    int putere;
+    string tip;
+
+    Motor(int p = 0, string t = "") : putere(p), tip(t) {}
+
+    friend ostream& operator<<(ostream& out, const Motor& m);
+    friend istream& operator>>(istream& in, Motor& m);
+};
+
+ostream& operator<<(ostream& out, const Motor& m) {
+    out << "Putere = " << m.putere << " CP, Tip = " << m.tip;
+    return out;
+}
+
+istream& operator>>(istream& in, Motor& m) {
+    cout << "Introduceti puterea motorului: ";
+    in >> m.putere;
+    cout << "Introduceti tipul motorului: ";
+    in >> m.tip;
+    return in;
+}
+
+class Masina {
+public:
+    string marca;
+    int an_fabricatie;
+    int pret;
+    Motor motor;
+
+    Masina(string m = "", int an = 0, int p = 0, Motor mot = Motor()) : marca(m), an_fabricatie(an), pret(p), motor(mot) {}
+
+    friend ostream& operator<<(ostream& out, const Masina& m);
+    friend istream& operator>>(istream& in, Masina& m);
+};
+
+ostream& operator<<(ostream& out, const Masina& m) {
+    out << "Marca = " << m.marca << ", An fabricatie = " << m.an_fabricatie << ", Pret = " << m.pret << ", Motor = " << m.motor;
+    return out;
+}
+
+istream& operator>>(istream& in, Masina& m) {
+    cout << "Introduceti marca masinii: ";
+    in >> m.marca;
+    cout << "Introduceti anul de fabricatie: ";
+    in >> m.an_fabricatie;
+    cout << "Introduceti pretul masinii: ";
+    in >> m.pret;
+    in >> m.motor;
+    return in;
+}
+
+class Proprietar {
+public:
+    string nume;
+    int varsta;
+
+    Proprietar(string n = "", int v = 0) : nume(n), varsta(v) {}
+
+    friend ostream& operator<<(ostream& out, const Proprietar& p);
+    friend istream& operator>>(istream& in, Proprietar& p);
+};
+
+ostream& operator<<(ostream& out, const Proprietar& p) {
+    out << "Nume = " << p.nume << ", Varsta = " << p.varsta;
+    return out;
+}
+
+istream& operator>>(istream& in, Proprietar& p) {
+    cout << "Introduceti numele proprietarului: ";
+    in >> p.nume;
+    cout << "Introduceti varsta proprietarului: ";
+    in >> p.varsta;
+    return in;
+}
+
+class Garage {
+public:
+    string nume_garaj;
+    string adresa;
+    vector<Masina> masini;
+
+    Garage(string n = "", string a = "") : nume_garaj(n), adresa(a) {}
+
+    string getNumeGaraj() const { return nume_garaj; }
+    void setNumeGaraj(const string& n) { nume_garaj = n; }
+
+    string getAdresa() const { return adresa; }
+    void setAdresa(const string& a) { adresa = a; }
+
+    void adaugaMasina(const Masina& m) {
+        masini.push_back(m);
+    }
+
+    void afiseazaDetaliiGaraj() const {
+        cout << "Nume garaj: " << nume_garaj << ", Adresa: " << adresa << endl;
+        cout << "Masini in garaj: " << endl;
+        for (const auto& masina : masini) {
+            cout << masina << endl;
+        }
+    }
+
+    Garage& operator=(const Garage& g) {
+        if (this != &g) {
+            nume_garaj = g.nume_garaj;
+            adresa = g.adresa;
+            masini = g.masini;
+        }
+        return *this;
+    }
+
+    bool operator==(const Garage& g) const {
+        return nume_garaj == g.nume_garaj;
+    }
+
+    friend ostream& operator<<(ostream& out, const Garage& g) {
+        out << "Garaj: " << g.nume_garaj << ", Adresa: " << g.adresa << endl;
+        return out;
+    }
+
+    friend istream& operator>>(istream& in, Garage& g) {
+        cout << "Introduceti numele garajului: ";
+        in >> g.nume_garaj;
+        cout << "Introduceti adresa garajului: ";
+        in >> g.adresa;
+        return in;
+    }
+};
+
+int main() {
+    Garage g1("Garajul Central", "Strada Principala 123");
+
+    Masina m1("BMW", 2020, 35000, Motor(200, "Diesel"));
+    Masina m2("Audi", 2022, 45000, Motor(250, "Benzina"));
+    
+    g1.adaugaMasina(m1);
+    g1.adaugaMasina(m2);
+
+    g1.afiseazaDetaliiGaraj();
+
+    Garage g2;
+    g2 = g1;
+    cout << "Detalii despre g2 dupa atribuire:" << endl;
+    cout << g2;
+
+    if (g1 == g2) {
+        cout << "Garajele sunt identice." << endl;
+    } else {
+        cout << "Garajele nu sunt identice." << endl;
+    }
+
+    return 0;
+}
