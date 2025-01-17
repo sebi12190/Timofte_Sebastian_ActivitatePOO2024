@@ -1,0 +1,137 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+class Motor {
+public:
+    int putere;
+    string tip;
+
+    Motor(int p = 0, string t = "") : putere(p), tip(t) {}
+
+    friend ostream& operator<<(ostream& out, const Motor& m);
+    friend istream& operator>>(istream& in, Motor& m);
+};
+
+ostream& operator<<(ostream& out, const Motor& m) {
+    out << "Putere = " << m.putere << " CP, Tip = " << m.tip;
+    return out;
+}
+
+istream& operator>>(istream& in, Motor& m) {
+    cout << "Introduceti puterea motorului: ";
+    in >> m.putere;
+    cout << "Introduceti tipul motorului: ";
+    in >> m.tip;
+    return in;
+}
+
+class Masina {
+public:
+    string marca;
+    int an_fabricatie;
+    int pret;
+    Motor motor;
+
+    Masina(string m = "", int an = 0, int p = 0, Motor mot = Motor()) : marca(m), an_fabricatie(an), pret(p), motor(mot) {}
+
+    friend ostream& operator<<(ostream& out, const Masina& m);
+    friend istream& operator>>(istream& in, Masina& m);
+};
+
+ostream& operator<<(ostream& out, const Masina& m) {
+    out << "Marca = " << m.marca << ", An fabricatie = " << m.an_fabricatie << ", Pret = " << m.pret << ", Motor = " << m.motor;
+    return out;
+}
+
+istream& operator>>(istream& in, Masina& m) {
+    cout << "Introduceti marca masinii: ";
+    in >> m.marca;
+    cout << "Introduceti anul de fabricatie: ";
+    in >> m.an_fabricatie;
+    cout << "Introduceti pretul masinii: ";
+    in >> m.pret;
+    in >> m.motor;
+    return in;
+}
+
+class Proprietar {
+public:
+    string nume;
+    int varsta;
+
+    Proprietar(string n = "", int v = 0) : nume(n), varsta(v) {}
+
+    friend ostream& operator<<(ostream& out, const Proprietar& p);
+    friend istream& operator>>(istream& in, Proprietar& p);
+};
+
+ostream& operator<<(ostream& out, const Proprietar& p) {
+    out << "Nume = " << p.nume << ", Varsta = " << p.varsta;
+    return out;
+}
+
+istream& operator>>(istream& in, Proprietar& p) {
+    cout << "Introduceti numele proprietarului: ";
+    in >> p.nume;
+    cout << "Introduceti varsta proprietarului: ";
+    in >> p.varsta;
+    return in;
+}
+
+int main() {
+    const int n = 3;
+
+    Motor vector_motori[n];
+    Masina vector_masini[n];
+    Proprietar vector_proprietari[n];
+
+    cout << "Introduceti detalii pentru motoare:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cin >> vector_motori[i];
+    }
+
+    cout << "Introduceti detalii pentru masini:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cin >> vector_masini[i];
+    }
+
+    cout << "Introduceti detalii pentru proprietari:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cin >> vector_proprietari[i];
+    }
+
+    cout << "Detalii motoare:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cout << vector_motori[i] << endl;
+    }
+
+    cout << "Detalii masini:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cout << vector_masini[i] << endl;
+    }
+
+    cout << "Detalii proprietari:" << endl;
+    for (int i = 0; i < n; ++i) {
+        cout << vector_proprietari[i] << endl;
+    }
+
+    int m = 2, p = 2;
+    Masina matrice_masini[m][p];
+
+    cout << "Introduceti detalii pentru matricea de masini (" << m << "x" << p << "):" << endl;
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < p; ++j) {
+            cin >> matrice_masini[i][j];
+        }
+    }
+
+    cout << "Matricea de masini:" << endl;
+    for (int i = 0; i < m; ++i) {
+        for (int j = 0; j < p; ++j) {
+            cout << matrice_masini[i][j] << endl;
+        }
+    }
+
+    return 0;
+}
